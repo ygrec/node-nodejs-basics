@@ -2,7 +2,7 @@ import { opendir } from 'node:fs/promises';
 
 const list = async () => {
     try {
-        const dir = await opendir('./src/fs/filesw');
+        const dir = await opendir('./src/fs/files');
         for await (const dirent of dir)
             console.log(dirent.name);
     

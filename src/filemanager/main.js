@@ -1,11 +1,11 @@
 import os from 'node:os';
 import { fileURLToPath } from 'node:url';
-import { dirname } from 'path';
 import { argv, env, stdin, stdout } from 'node:process';
+
 import * as navigation from './navigation.js';
+import * as files from './file_operations.js';
 
 import * as log from '../utils.js';
-import path from 'node:path';
 
 var username = '';
 var currentPath = import.meta.dirname;
@@ -73,12 +73,12 @@ const startFileManager = async () => {
         log.logDbg('cmd UP parsed');
 
         await navigation.navigateUp(currentPath)
-        .then( (newPath) => {
-          currentPath = newPath;
-        })
-        .catch((error) => {
-          log.logErr(error + 'Can`t navigate UP! keep currentPath '+ currentPath);
-        } );
+          .then((newPath) => {
+            currentPath = newPath;
+          })
+          .catch((error) => {
+            log.logErr(error + 'Can`t navigate UP! keep currentPath ' + currentPath);
+          });
 
         break;
       case 'cd':
@@ -86,17 +86,41 @@ const startFileManager = async () => {
         log.logDbg('cmd CD parsed, new path is ' + newPath);
 
         await navigation.changeDir(currentPath, newPath)
-        .then( (newPath) => {
-          currentPath = newPath;
-        })
-        .catch(() => {
-          log.logMsg('Error!!!!!');
-        } );
-        
+          .then((newPath) => {
+            currentPath = newPath;
+          })
+          .catch(() => {
+            log.logMsg('Error!!!!!');
+          });
+
         break;
       case 'ls':
         navigation.listDir(currentPath);
         break;
+
+      case 'list':
+        await files.listFile(currentPath, command[1]);
+        break;
+      case 'add':
+        await files.createFile(currentPath, command[1]);
+        break;
+      case 'mkdir':
+        await files.createDir(currentPath, command[1]);
+        break;
+      case 'rn':
+        await files.renameFile(currentPath, command[1]);
+        break;
+      case 'cp': 
+        await files.copyFile(currentPath, command[1]);     //Stream
+        break;
+      case 'mv':
+        await files.moveFile(currentPath, command[1]);     //Stream
+        break;
+      case 'rm':
+        await files.deleteFile(currentPath, command[1]);
+        break;
+
+
       case '.exit':
         log.logDbg('cmd EXIT parsed, close the filemanager');
         // stdin.destroy();

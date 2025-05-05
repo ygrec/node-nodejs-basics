@@ -11,7 +11,8 @@ import * as archieve from './archieve.js';
 import * as log from '../utils.js';
 
 var username = '';
-var currentPath = import.meta.dirname;
+// var currentPath = import.meta.dirname;
+var currentPath = os.homedir();
 const greetingString = 'Welcome to the File Manager';
 
 

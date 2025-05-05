@@ -22,7 +22,7 @@ export async function osInfo(domainName) {
             }
             break;
         case 'homedir':
-            console.log(`System EOL symbol is \"${os.homedir}\"`);
+            console.log(`System EOL symbol is \"${os.homedir()}\"`);
             break;
         case 'username':
             console.log(`System EOL symbol is \"${os.userInfo().username}\"`);

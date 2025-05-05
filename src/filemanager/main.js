@@ -127,10 +127,10 @@ const startFileManager = async () => {
         break;
 
       case 'hash':
-        await calculateHash(command[1]);
+        await calculateHash(currentPath, command[1]);
         break;
 
-      case '.exit':
+        case '.exit':
         log.logDbg('cmd EXIT parsed, close the filemanager');
         // stdin.destroy();
         exitHandler();

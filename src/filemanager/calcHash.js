@@ -1,8 +1,12 @@
 import createReadStream from 'node:fs';
 import createHash from 'node:crypto';
 
-export async function calculateHash(filePath) {
+import * as log from '../utils.js';
+
+export async function calculateHash(currentPath, currentFileName) {
   try {
+    let fullPath = path.resolve(currentPath, currentFileName);
+
     const hash = createHash('sha256');
 
     const input = createReadStream(filePath);
@@ -15,6 +19,6 @@ export async function calculateHash(filePath) {
       }
     });
   } catch (error) {
-     log.logMsg(`Hash calculation error ${error.code}`);
+    log.logMsg(`Hash calculation error ${error.code}`);
   }
 };

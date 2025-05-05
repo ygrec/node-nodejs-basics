@@ -4,6 +4,7 @@ import { argv, env, stdin, stdout } from 'node:process';
 
 import * as navigation from './navigation.js';
 import * as files from './file_operations.js';
+import { osInfo } from './os_info.js';
 
 import * as log from '../utils.js';
 
@@ -110,7 +111,7 @@ const startFileManager = async () => {
       case 'rn':
         await files.renameFile(currentPath, command[1]);
         break;
-      case 'cp': 
+      case 'cp':
         await files.copyFile(currentPath, command[1]);     //Stream
         break;
       case 'mv':
@@ -120,6 +121,9 @@ const startFileManager = async () => {
         await files.deleteFile(currentPath, command[1]);
         break;
 
+      case 'os':
+        await osInfo(command[1]);
+        break;
 
       case '.exit':
         log.logDbg('cmd EXIT parsed, close the filemanager');

@@ -5,6 +5,7 @@ import { argv, env, stdin, stdout } from 'node:process';
 import * as navigation from './navigation.js';
 import * as files from './file_operations.js';
 import { osInfo } from './os_info.js';
+import { calculateHash } from './calcHash.js';
 
 import * as log from '../utils.js';
 
@@ -123,6 +124,10 @@ const startFileManager = async () => {
 
       case 'os':
         await osInfo(command[1]);
+        break;
+
+      case 'hash':
+        await calculateHash(command[1]);
         break;
 
       case '.exit':

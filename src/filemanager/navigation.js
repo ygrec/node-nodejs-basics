@@ -1,4 +1,4 @@
-import { opendir, readdir } from 'node:fs/promises';
+import { opendir, readdir, stat } from 'node:fs/promises';
 // import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -28,7 +28,7 @@ export async function listDir(curDir) {
             index += 1;
         }
     } catch (error) {
-        log.logMsg(`${error.code}. ${error}`, 'error');
+        log.logMsg(`${error.code}. ${error.message}`);
     }
 }
 
@@ -39,16 +39,12 @@ export async function changeDir(currentPath, newPath) {
 
     try {
         normalizedNewPath = path.resolve(currentPath, newPath);
-    }
-    catch (error) {
-    try {
-        normalizedNewPath = path.join(currentPath, newPath);
+        await stat(normalizedNewPath);
     }
     catch (error) {
         console.log("It is not a directory path!");
         return currentPath;
-    }}
-
+    }
 
     return normalizedNewPath;
 }

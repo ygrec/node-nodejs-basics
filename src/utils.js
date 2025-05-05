@@ -2,6 +2,7 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
 const USE_COLORS = true;
+const USE_DEBUG = false;
 const supportsColor =
   process.stdout.isTTY && process.env.TERM !== 'dumb' && USE_COLORS;
 
@@ -33,7 +34,8 @@ export function logInfo(msg) {
 }
 
 export function logDbg(msg) {
-  logMsg(msg, 'debug');
+  if( USE_DEBUG )
+    logMsg(msg, 'debug');
 }
 
 export function logErr(msg) {

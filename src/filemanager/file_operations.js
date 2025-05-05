@@ -46,28 +46,29 @@ export async function createDir(currentPath, dirName) {
 }
 
 export async function renameFile(currentPath, currentFileName, newFileName) {
-    // try {
-    //     let fullPath = path.resolve(currentPath, currentFileName);
-    //     let fullNewPath = path.resolve(currentPath, newFileName);
+    try {
+        let fullPath = path.resolve(currentPath, currentFileName);
+        let fullNewPath = path.resolve(currentPath, newFileName);
 
-    //     await fs_p.copyFile(fullPath, fullNewPath);
+        // TODO refactor to use the Stream API
+        await fs_p.rename(fullPath, fullNewPath);
 
-    // } catch (err) {
-    //     log.logErr(`Pperation failed - Move file \"${fullPath}\" to the \"${fullNewPath}\"`);
-    // }
+    } catch (err) {
+        log.logErr(`Operation failed - Move file \"${fullPath}\" to the \"${fullNewPath}\"`);
+    }
 }
 
 export async function copyFile(currentPath, currentFileName, newFileName) {
-    // try {
-    //     let fullPath = path.resolve(currentPath, currentFileName);
-    //     let fullNewPath = path.resolve(currentPath, newFileName);
+    try {
+        let fullPath = path.resolve(currentPath, currentFileName);
+        let fullNewPath = path.resolve(currentPath, newFileName);
 
-    //     // TODO refactor to use the Stream API
-    //     await fs_p.copyFile(fullPath, fullNewPath);
+        // TODO refactor to use the Stream API
+        await fs_p.copyFile(fullPath, fullNewPath);
 
-    // } catch (err) {
-    //     log.logErr(`Operation failed ${err} - Copy file \"${fullPath}\" to the \"${fullNewPath}\"`);
-    // }
+    } catch (err) {
+        log.logErr(`Operation failed ${err} - Copy file \"${fullPath}\" to the \"${fullNewPath}\"`);
+    }
 }
 
 export async function moveFile(currentPath, currentFileName, newFileName) {
@@ -76,7 +77,7 @@ export async function moveFile(currentPath, currentFileName, newFileName) {
         let fullNewPath = path.resolve(currentPath, newFileName);
 
         // TODO refactor to use the Stream API
-        await fs_p.copyFile(fullPath, fullNewPath);
+        await fs_p.rename(fullPath, fullNewPath);
 
         return fullNewPath;
     } catch (err) {

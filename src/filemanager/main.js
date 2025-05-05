@@ -112,10 +112,10 @@ const startFileManager = async () => {
         await files.renameFile(currentPath, command[1]);
         break;
       case 'cp':
-        await files.copyFile(currentPath, command[1]);     //Stream
+        await files.copyFile(currentPath, command[1], command[2]);     //Stream
         break;
       case 'mv':
-        await files.moveFile(currentPath, command[1]);     //Stream
+        await files.moveFile(currentPath, command[1], command[2]);     //Stream
         break;
       case 'rm':
         await files.deleteFile(currentPath, command[1]);

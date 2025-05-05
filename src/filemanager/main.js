@@ -2,10 +2,13 @@ import os from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { dirname } from 'path';
 import { argv, env, stdin, stdout } from 'node:process';
+import * as navigation from './navigation.js';
 
-import { logMsg, logInfo, logDbg } from '../utils.js';
+import * as log from '../utils.js';
+import path from 'node:path';
 
 var username = '';
+var currentPath = import.meta.dirname;
 const greetingString = 'Welcome to the File Manager';
 
 
@@ -17,7 +20,7 @@ function parseAgrsAndEnv() {
 
   if (resultEnv[0]) {
     username = resultEnv[0];
-    logDbg('Found the arg, passed through the NPM: ' + os.EOL + resultEnv, 'debug');
+    log.logDbg('Found the arg, passed through the NPM: ' + os.EOL + resultEnv, 'debug');
     return;
   }
 
@@ -33,9 +36,9 @@ function parseAgrsAndEnv() {
     }, [])
     .join(', ');
 
-  if(result) {
+  if (result) {
     username = result;
-    logDbg('Node ARGS is: ' + result, 'debug');
+    log.logDbg('Node ARGS is: ' + result, 'debug');
     return;
   }
 
@@ -48,10 +51,10 @@ process.stdin.resume();
 function exitHandler(signal) {
   const farewellString = `Thank you for using File Manager, ${username}, goodbye!`;
 
-  logMsg(farewellString, 'important');
+  log.logMsg(farewellString, 'important');
   process.exit();
 }
- 
+
 process.on('SIGINT', exitHandler);
 
 
@@ -59,30 +62,51 @@ const startFileManager = async () => {
 
   parseAgrsAndEnv();
 
-  logMsg(`${greetingString}, ${username}`, 'important');
+  log.logMsg(`${greetingString}, ${username}`, 'important');
+  navigation.status(currentPath);
 
-  let currentPath = dirname(fileURLToPath(import.meta.url));
-  logMsg("Current Path is " + currentPath + os.EOL + 'import as ' + import.meta.dirname,);
-
-  stdin.on('data', (chunk) => {
-    logDbg(`Received chunk ${chunk}`);
+  stdin.on('data', async (chunk) => {
+    log.logDbg(`Received chunk ${chunk}`);
     const command = chunk.toString().trim().split(' ');
     switch (command[0]) {
       case 'up':
-        logDbg('cmd UP parsed');
+        log.logDbg('cmd UP parsed');
+
+        await navigation.navigateUp(currentPath)
+        .then( (newPath) => {
+          currentPath = newPath;
+        })
+        .catch((error) => {
+          log.logErr(error + 'Can`t navigate UP! keep currentPath '+ currentPath);
+        } );
+
         break;
       case 'cd':
-        logDbg('cmd CD parsed');
+        let newPath = command[1];
+        log.logDbg('cmd CD parsed, new path is ' + newPath);
+
+        await navigation.changeDir(currentPath, newPath)
+        .then( (newPath) => {
+          currentPath = newPath;
+        })
+        .catch(() => {
+          log.logMsg('Error!!!!!');
+        } );
+        
+        break;
+      case 'ls':
+        navigation.listDir(currentPath);
         break;
       case '.exit':
-        logDbg('cmd EXIT parsed, close the filemanager');
+        log.logDbg('cmd EXIT parsed, close the filemanager');
         // stdin.destroy();
         exitHandler();
         break;
       default:
-        logMsg(`Unknown command \"${command[0]}\", please, try again!`, 'important');
+        log.logMsg(`Unknown command \"${command[0]}\", please, try again!`, 'important');
         break;
     }
+    navigation.status(currentPath);
   });
 };
 

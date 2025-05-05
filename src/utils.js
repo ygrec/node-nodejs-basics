@@ -36,6 +36,9 @@ export function logDbg(msg) {
   logMsg(msg, 'debug');
 }
 
+export function logErr(msg) {
+  logMsg(msg, 'error');
+}
 
 export function getPathData(meta) {
   const __filename = fileURLToPath(meta);

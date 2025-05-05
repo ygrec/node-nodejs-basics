@@ -6,6 +6,7 @@ import * as navigation from './navigation.js';
 import * as files from './file_operations.js';
 import { osInfo } from './os_info.js';
 import { calculateHash } from './calcHash.js';
+import * as archieve from './archieve.js';
 
 import * as log from '../utils.js';
 
@@ -131,10 +132,10 @@ const startFileManager = async () => {
         break;
 
       case 'compress':
-        await compress(currentPath, command[1], command[2]);
+        await archieve.compress(currentPath, command[1], command[2]);
         break;
       case 'decompress':
-        await decompress(currentPath, command[1], command[2]);
+        await archieve.decompress(currentPath, command[1], command[2]);
         break;
 
       case '.exit':

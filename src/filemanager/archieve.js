@@ -2,28 +2,31 @@ import fs, {
   createReadStream,
   createWriteStream,
 } from 'node:fs';
-
+import path from 'node:path';
 import { createBrotliCompress, createBrotliDecompress } from 'node:zlib';
 import { pipeline } from 'node:stream/promises';
 
 
-async function compress(currentPath, fileName, newFileName) {
+export async function compress(currentPath, currentFileName, newFileName) {
+
+  if( currentFileName == undefined || newFileName == undefined)
+    return undefined;
 
   let fullPath = path.resolve(currentPath, currentFileName);
   let fullNewPath = path.resolve(currentPath, newFileName);
 
   try {
-    if (!fs.existsSync(inputFile)) {
-      throw new Error("Has no input file");
+    if (!fs.existsSync(fullPath)) {
+      throw new Error(`Has no input file ${fullPath}`);
     }
 
-    if (fs.existsSync(outputArchive)) {
+    if (fs.existsSync(fullNewPath)) {
       throw new Error("Output archieve already present on the file system");
     }
 
     const packedStream = createBrotliCompress();
-    const inputStream = createReadStream(inputFile);
-    const outputStream = createWriteStream(outputArchive);
+    const inputStream = createReadStream(fullPath);
+    const outputStream = createWriteStream(fullNewPath);
 
     await pipeline(inputStream, packedStream, outputStream);
 
@@ -32,8 +35,10 @@ async function compress(currentPath, fileName, newFileName) {
   }
 };
 
+export async function decompress(currentPath, currentFileName, newFileName) {
 
-async function decompress(currentPath, fileName, newFileName) {
+  if( currentFileName == undefined || newFileName == undefined)
+    return undefined;
 
   let fullPath = path.resolve(currentPath, currentFileName);
   let fullNewPath = path.resolve(currentPath, newFileName);

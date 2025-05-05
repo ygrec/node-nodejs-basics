@@ -33,15 +33,16 @@ export async function listDir(curDir) {
 }
 
 export async function changeDir(currentPath, newPath) {
+    let normalizedNewPath = newPath;
     if (newPath == undefined)
-        newPath = os.homedir;
+        normalizedNewPath = os.homedir;
 
     try {
-        newPath = path.resolve(newPath);
+        normalizedNewPath = path.resolve(currentPath, newPath);
     }
     catch (error) {
     try {
-        newPath = path.join(currentPath, newPath);
+        normalizedNewPath = path.join(currentPath, newPath);
     }
     catch (error) {
         console.log("It is not a directory path!");
@@ -49,7 +50,7 @@ export async function changeDir(currentPath, newPath) {
     }}
 
 
-    return newPath;
+    return normalizedNewPath;
 }
 
 export async function navigateUp(currentPath) {

@@ -100,7 +100,7 @@ const startFileManager = async () => {
         navigation.listDir(currentPath);
         break;
 
-      case 'list':
+      case 'cat':
         await files.listFile(currentPath, command[1]);
         break;
       case 'add':
@@ -136,7 +136,7 @@ const startFileManager = async () => {
       case 'decompress':
         await decompress(currentPath, command[1], command[2]);
         break;
-        
+
       case '.exit':
         log.logDbg('cmd EXIT parsed, close the filemanager');
         // stdin.destroy();
